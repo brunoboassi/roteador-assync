@@ -1,0 +1,44 @@
+spring:
+  cloud:
+    stream:
+      instanceIndex: 0
+      instanceCount: 2
+      kafka:
+        binder:
+          brokers: localhost:9092
+        bindings:
+          reply:
+            consumer:
+              startOffset: earliest
+              autoRebalanceEnabled: false
+              configuration:
+                key:
+                  deserializer: org.apache.kafka.common.serialization.StringDeserializer
+                value:
+                  deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+                spring:
+                  json:
+                    trusted:
+                      packages: '*'
+          request:
+            producer:
+              configuration:
+                key:
+                  serializer: org.apache.kafka.common.serialization.StringSerializer
+                value:
+                  serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      bindings:
+        reply:
+          destination: responses
+          group: responseGroup
+          consumer:
+            partitioned: true
+        request:
+          destination: requests
+          producer:
+            partition-count: 2
+logging:
+  level:
+    root: INFO
+server:
+  port: 0
