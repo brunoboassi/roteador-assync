@@ -1,8 +1,6 @@
 spring:
   cloud:
     stream:
-      instanceIndex: 0
-      instanceCount: 2
       kafka:
         binder:
           brokers: localhost:9092
@@ -10,7 +8,6 @@ spring:
           reply:
             consumer:
               startOffset: earliest
-              autoRebalanceEnabled: false
               configuration:
                 key:
                   deserializer: org.apache.kafka.common.serialization.StringDeserializer

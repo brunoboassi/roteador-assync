@@ -35,16 +35,19 @@ public class RouterBeanConfig {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> testWhenMetricPathIsNotMeet(ObjectMapper mapper, QueueGateway gateway, @Value("${spring.cloud.stream.instanceIndex}") String partition) {
+    public RouterFunction<ServerResponse> testWhenMetricPathIsNotMeet(ObjectMapper mapper, QueueGateway gateway) {
         RouterFunction<ServerResponse> route = RouterFunctions.route(
                 RequestPredicates.path("/magica"),
                 request -> {
                     try {
                         return ServerResponse.ok().body(BodyInserters
-                                .fromValue(mapper.readValue(gateway.handle(Request.builder().id(UUID.randomUUID().toString()).origin(1).messageIndex(1).build(),partition), Response.class)));
+                                .fromValue(mapper.readValue(gateway.handle(Request.builder().id(UUID.randomUUID().toString()).origin(1).messageIndex(1).build()), Response.class)));
                     } catch (IOException e) {
                         e.printStackTrace();
                         return ServerResponse.badRequest().build();
+                    }finally
+                    {
+                        System.out.print("aaa");
                     }
                 });
 
